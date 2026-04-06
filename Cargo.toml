@@ -1,0 +1,22 @@
+[package]
+name = "heif2jpeg"
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+description = "Fast HEIC/HEIF to JPEG converter for Node.js"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+napi = { version = "2", features = ["napi8"] }
+napi-derive = "2"
+jpeg-encoder = "0.6"
+
+[build-dependencies]
+napi-build = "2"
+cmake = "0.1"
+
+[profile.release]
+lto = true
+strip = "symbols"

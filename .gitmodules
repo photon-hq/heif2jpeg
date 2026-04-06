@@ -1,0 +1,6 @@
+[submodule "deps/libde265"]
+	path = deps/libde265
+	url = https://github.com/strukturag/libde265.git
+[submodule "deps/libheif"]
+	path = deps/libheif
+	url = https://github.com/strukturag/libheif.git
