@@ -24,6 +24,7 @@ fn main() {
         .define("WITH_GDK_PIXBUF", "OFF")
         .define("WITH_JPEG_DECODER", "OFF")
         .define("WITH_JPEG_ENCODER", "OFF")
+        .define("WITH_DOXYGEN", "OFF")
         .define("CMAKE_POSITION_INDEPENDENT_CODE", "ON")
         .define(
             "LIBDE265_INCLUDE_DIR",
