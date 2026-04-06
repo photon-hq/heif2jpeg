@@ -1,6 +1,6 @@
 {
   "name": "heif2jpeg",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Fast HEIC/HEIF to JPEG converter — native, zero runtime dependencies",
   "type": "commonjs",
   "main": "index.js",
