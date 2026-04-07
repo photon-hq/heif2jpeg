@@ -57,7 +57,7 @@ jobs:
         env:
           CC_aarch64_unknown_linux_gnu: ${{ matrix.target == 'aarch64-unknown-linux-gnu' && 'aarch64-linux-gnu-gcc' || '' }}
           CXX_aarch64_unknown_linux_gnu: ${{ matrix.target == 'aarch64-unknown-linux-gnu' && 'aarch64-linux-gnu-g++' || '' }}
-          CMAKE_TOOLCHAIN_FILE: ${{ matrix.target == 'aarch64-unknown-linux-gnu' && 'cmake/aarch64-linux-gnu.cmake' || '' }}
+          CMAKE_TOOLCHAIN_FILE: ${{ matrix.target == 'aarch64-unknown-linux-gnu' && format('{0}/cmake/aarch64-linux-gnu.cmake', github.workspace) || '' }}
 
       - name: Test
         if: "!contains(matrix.target, 'aarch64-unknown-linux') && !contains(matrix.target, 'aarch64-pc-windows')"
