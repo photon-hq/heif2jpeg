@@ -35,6 +35,7 @@ fn main() {
         .define("WITH_JPEG_ENCODER", "OFF")
         .define("BUILD_DOCUMENTATION", "OFF")
         .define("BUILD_TESTING", "OFF")
+        .define("CMAKE_DISABLE_FIND_PACKAGE_JPEG", "ON")
         .define("CMAKE_POSITION_INDEPENDENT_CODE", "ON")
         .define(
             "LIBDE265_INCLUDE_DIR",
