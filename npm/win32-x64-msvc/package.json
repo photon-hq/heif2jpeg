@@ -11,9 +11,12 @@
   "files": [
     "heif2jpeg.win32-x64-msvc.node"
   ],
-  "description": "Fast HEIC/HEIF to JPEG converter — native, zero runtime dependencies",
+  "description": "Fast HEIC/HEIF to JPEG converter - native, zero runtime dependencies",
   "license": "MIT",
   "engines": {
     "node": ">= 18"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

@@ -11,12 +11,15 @@
   "files": [
     "heif2jpeg.linux-arm64-gnu.node"
   ],
-  "description": "Fast HEIC/HEIF to JPEG converter — native, zero runtime dependencies",
+  "description": "Fast HEIC/HEIF to JPEG converter - native, zero runtime dependencies",
   "license": "MIT",
   "engines": {
     "node": ">= 18"
   },
   "libc": [
     "glibc"
-  ]
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
 }
