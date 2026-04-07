@@ -34,6 +34,10 @@
   "devDependencies": {
     "@napi-rs/cli": "^2"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/photon-hq/heif2jpeg"
+  },
   "license": "MIT",
   "engines": {
     "node": ">= 18"

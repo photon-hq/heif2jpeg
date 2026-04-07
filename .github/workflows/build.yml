@@ -102,6 +102,4 @@ jobs:
       - name: Publish
         run: |
           npx napi prepublish -t npm --skip-gh-release
-          npm publish --provenance --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          npm publish --access public
