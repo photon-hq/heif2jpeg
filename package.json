@@ -11,6 +11,9 @@
   ],
   "napi": {
     "name": "heif2jpeg",
+    "package": {
+      "name": "@heif2jpeg/heif2jpeg"
+    },
     "triples": {
       "defaults": true,
       "additional": [
@@ -36,10 +39,11 @@
     "node": ">= 18"
   },
   "optionalDependencies": {
-    "heif2jpeg-win32-x64-msvc": "0.1.1",
-    "heif2jpeg-darwin-x64": "0.1.1",
-    "heif2jpeg-linux-x64-gnu": "0.1.1",
-    "heif2jpeg-darwin-arm64": "0.1.1",
-    "heif2jpeg-linux-arm64-gnu": "0.1.1"
+    "@heif2jpeg/heif2jpeg-win32-x64-msvc": "0.1.2",
+    "@heif2jpeg/heif2jpeg-win32-arm64-msvc": "0.1.2",
+    "@heif2jpeg/heif2jpeg-darwin-x64": "0.1.2",
+    "@heif2jpeg/heif2jpeg-darwin-arm64": "0.1.2",
+    "@heif2jpeg/heif2jpeg-linux-x64-gnu": "0.1.2",
+    "@heif2jpeg/heif2jpeg-linux-arm64-gnu": "0.1.2"
   }
 }

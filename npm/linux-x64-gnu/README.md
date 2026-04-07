@@ -1,3 +1,3 @@
-# `heif2jpeg-linux-x64-gnu`
+# `@heif2jpeg/heif2jpeg-linux-x64-gnu`
 
-This is the **x86_64-unknown-linux-gnu** binary for `heif2jpeg`
+This is the **x86_64-unknown-linux-gnu** binary for `@heif2jpeg/heif2jpeg`

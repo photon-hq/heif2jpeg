@@ -1,5 +1,5 @@
 {
-  "name": "heif2jpeg-win32-arm64-msvc",
+  "name": "@heif2jpeg/heif2jpeg-win32-arm64-msvc",
   "version": "0.1.2",
   "os": [
     "win32"
