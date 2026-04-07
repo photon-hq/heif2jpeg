@@ -1,0 +1,19 @@
+{
+  "name": "heif2jpeg-darwin-arm64",
+  "version": "0.1.2",
+  "os": [
+    "darwin"
+  ],
+  "cpu": [
+    "arm64"
+  ],
+  "main": "heif2jpeg.darwin-arm64.node",
+  "files": [
+    "heif2jpeg.darwin-arm64.node"
+  ],
+  "description": "Fast HEIC/HEIF to JPEG converter — native, zero runtime dependencies",
+  "license": "MIT",
+  "engines": {
+    "node": ">= 18"
+  }
+}

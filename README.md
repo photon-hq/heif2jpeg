@@ -55,7 +55,7 @@ All processing runs on the libuv thread pool — the main thread is never blocke
 Requires Rust, CMake, and a C/C++ compiler.
 
 ```bash
-git clone --recurse-submodules https://github.com/nicmus/heif2jpeg.git
+git clone --recurse-submodules https://github.com/photon-hq/heif2jpeg.git
 cd heif2jpeg
 npm install
 npx napi build --platform --release
