@@ -88,6 +88,9 @@ jobs:
           node-version: 22
           registry-url: https://registry.npmjs.org
 
+      - name: Install dependencies
+        run: npm install
+
       - name: Download all artifacts
         uses: actions/download-artifact@v4
         with:
@@ -98,7 +101,6 @@ jobs:
 
       - name: Publish
         run: |
-          npm install
           npx napi prepublish -t npm
           npm publish --provenance --access public
         env:
