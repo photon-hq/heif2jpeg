@@ -65,7 +65,7 @@ jobs:
         run: npx napi build --platform --release --target ${{ matrix.target }}
 
       - name: Test
-        if: "!contains(matrix.target, 'aarch64-unknown-linux') && !contains(matrix.target, 'aarch64-pc-windows')"
+        if: "!contains(matrix.target, 'aarch64-unknown-linux') && !contains(matrix.target, 'aarch64-pc-windows') && !(matrix.os == 'macos-15' && matrix.target == 'x86_64-apple-darwin')"
         run: npm test
 
       - name: Upload artifact
