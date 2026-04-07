@@ -1,12 +1,19 @@
 use std::env;
-use std::path::Path;
+use std::path::{Path, PathBuf};
 
 fn main() {
     napi_build::setup();
 
     let target = env::var("TARGET").unwrap();
     let is_windows = target.contains("windows");
-    let is_cross_linux_arm64 = target == "aarch64-unknown-linux-gnu";
+    let manifest_dir = PathBuf::from(env::var("CARGO_MANIFEST_DIR").unwrap());
+
+    // Cross-compilation toolchain file
+    let toolchain_file = if target == "aarch64-unknown-linux-gnu" {
+        Some(manifest_dir.join("cmake/aarch64-linux-gnu.cmake"))
+    } else {
+        None
+    };
 
     // --- Build libde265 (HEVC decoder, static) ---
     let mut de265_cfg = cmake::Config::new("deps/libde265");
@@ -16,12 +23,8 @@ fn main() {
         .define("BUILD_EXAMPLES", "OFF")
         .define("CMAKE_POSITION_INDEPENDENT_CODE", "ON");
 
-    if is_cross_linux_arm64 {
-        de265_cfg
-            .define("CMAKE_C_COMPILER", "aarch64-linux-gnu-gcc")
-            .define("CMAKE_CXX_COMPILER", "aarch64-linux-gnu-g++")
-            .define("CMAKE_SYSTEM_NAME", "Linux")
-            .define("CMAKE_SYSTEM_PROCESSOR", "aarch64");
+    if let Some(ref tc) = toolchain_file {
+        de265_cfg.define("CMAKE_TOOLCHAIN_FILE", tc.to_str().unwrap());
     }
 
     let de265_dst = de265_cfg.build();
@@ -33,26 +36,8 @@ fn main() {
         println!("cargo:rustc-link-lib=static=de265");
     }
 
-    // Find the actual libde265 library file for passing to libheif
-    let de265_lib = if is_windows {
-        format!("{}/lib/libde265.lib", de265_dst.display())
-    } else {
-        format!("{}/lib/libde265.a", de265_dst.display())
-    };
-
-    // Sanity check
-    if !Path::new(&de265_lib).exists() {
-        // Try alternate location
-        let alt = format!("{}/lib/de265.lib", de265_dst.display());
-        if Path::new(&alt).exists() {
-            eprintln!("cargo:warning=Using alternate libde265 path: {}", alt);
-        } else {
-            panic!(
-                "libde265 library not found at {} or {}",
-                de265_lib, alt
-            );
-        }
-    }
+    // Find the actual libde265 library file
+    let de265_lib = find_lib(&de265_dst, &["libde265.lib", "libde265.a", "de265.lib"]);
 
     // --- Build libheif (static, decode only) ---
     let mut heif_cfg = cmake::Config::new("deps/libheif");
@@ -64,7 +49,6 @@ fn main() {
         .define("WITH_JPEG_ENCODER", "OFF")
         .define("BUILD_DOCUMENTATION", "OFF")
         .define("BUILD_TESTING", "OFF")
-        .define("WITH_REDUCED_VISIBILITY", "OFF")
         .define("CMAKE_POSITION_INDEPENDENT_CODE", "ON")
         .define(
             "LIBDE265_INCLUDE_DIR",
@@ -72,12 +56,14 @@ fn main() {
         )
         .define("LIBDE265_LIBRARY", &de265_lib);
 
-    if is_cross_linux_arm64 {
-        heif_cfg
-            .define("CMAKE_C_COMPILER", "aarch64-linux-gnu-gcc")
-            .define("CMAKE_CXX_COMPILER", "aarch64-linux-gnu-g++")
-            .define("CMAKE_SYSTEM_NAME", "Linux")
-            .define("CMAKE_SYSTEM_PROCESSOR", "aarch64");
+    if is_windows {
+        // Tell libheif that libde265 is a static library (avoid __declspec(dllimport))
+        heif_cfg.cflag("-DLIBDE265_STATIC_BUILD");
+        heif_cfg.cxxflag("-DLIBDE265_STATIC_BUILD");
+    }
+
+    if let Some(ref tc) = toolchain_file {
+        heif_cfg.define("CMAKE_TOOLCHAIN_FILE", tc.to_str().unwrap());
     }
 
     let heif_dst = heif_cfg.build();
@@ -92,4 +78,19 @@ fn main() {
         println!("cargo:rustc-link-lib=dylib=stdc++");
     }
     // Windows: MSVC links the C++ runtime automatically
+}
+
+/// Search for a library file under `base/lib/`, trying multiple names.
+fn find_lib(base: &Path, names: &[&str]) -> String {
+    for name in names {
+        let path = base.join("lib").join(name);
+        if path.exists() {
+            return path.to_str().unwrap().to_string();
+        }
+    }
+    panic!(
+        "Could not find library in {}/lib/. Tried: {:?}",
+        base.display(),
+        names
+    );
 }
