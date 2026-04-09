@@ -1,6 +1,6 @@
 {
   "name": "@heif2jpeg/heif2jpeg-darwin-x64",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "os": [
     "darwin"
   ],
