@@ -15,14 +15,7 @@ fn main() {
         .define("CMAKE_POSITION_INDEPENDENT_CODE", "ON")
         .build();
 
-    println!("cargo:rustc-link-search=native={}/lib", de265_dst.display());
-    if is_windows {
-        println!("cargo:rustc-link-lib=static=libde265");
-    } else {
-        println!("cargo:rustc-link-lib=static=de265");
-    }
-
-    // Find the actual libde265 library file
+    // Find the actual libde265 library file (needed by libheif cmake)
     let de265_lib = find_lib(&de265_dst, &["libde265.lib", "libde265.a"]);
 
     // --- Build libheif (static, decode only) ---
@@ -51,8 +44,22 @@ fn main() {
 
     let heif_dst = heif_cfg.build();
 
+    // --- Link order matters: heif depends on de265, so heif must come first ---
+    // The linker resolves symbols left-to-right. If de265 comes first, the linker
+    // doesn't yet know what symbols heif will need and may not pull them from the
+    // static archive. Putting heif first ensures its unresolved symbols (like
+    // de265_flush_data) are satisfied when de265 is processed next.
     println!("cargo:rustc-link-search=native={}/lib", heif_dst.display());
+    println!("cargo:rustc-link-search=native={}/lib64", heif_dst.display());
     println!("cargo:rustc-link-lib=static=heif");
+
+    println!("cargo:rustc-link-search=native={}/lib", de265_dst.display());
+    println!("cargo:rustc-link-search=native={}/lib64", de265_dst.display());
+    if is_windows {
+        println!("cargo:rustc-link-lib=static=libde265");
+    } else {
+        println!("cargo:rustc-link-lib=static=de265");
+    }
 
     // C++ standard library
     if target.contains("apple") {
@@ -62,16 +69,19 @@ fn main() {
     }
 }
 
-/// Search for a library file under `base/lib/`.
+/// Search for a library file under `base/lib/` or `base/lib64/`.
 fn find_lib(base: &Path, names: &[&str]) -> String {
-    for name in names {
-        let path = base.join("lib").join(name);
-        if path.exists() {
-            return path.to_str().unwrap().to_string();
+    for dir in &["lib", "lib64"] {
+        for name in names {
+            let path = base.join(dir).join(name);
+            if path.exists() {
+                return path.to_str().unwrap().to_string();
+            }
         }
     }
     panic!(
-        "Could not find library in {}/lib/. Tried: {:?}",
+        "Could not find library in {}/lib/ or {}/lib64/. Tried: {:?}",
+        base.display(),
         base.display(),
         names
     );
