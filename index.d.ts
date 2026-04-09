@@ -8,4 +8,4 @@ export interface ConvertOptions {
   quality?: number
 }
 /** Convert a HEIF/HEIC buffer to JPEG. */
-export declare function heifToJpeg(input: Buffer, options?: ConvertOptions | undefined | null): Promise<unknown>
+export declare function heifToJpeg(input: Uint8Array, options?: ConvertOptions | undefined | null): Promise<Buffer>

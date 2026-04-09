@@ -51,12 +51,12 @@ fn convert(input: &[u8], quality: u8) -> Result<Vec<u8>> {
 #[napi(object)]
 pub struct ConvertOptions {
     /// JPEG quality (1-100, default 85)
-    pub quality: Option<i32>,
+    pub quality: Option<u32>,
 }
 
 /// Convert a HEIF/HEIC buffer to JPEG.
-#[napi]
-pub fn heif_to_jpeg(input: Buffer, options: Option<ConvertOptions>) -> AsyncTask<ConvertTask> {
+#[napi(ts_return_type = "Promise<Buffer>")]
+pub fn heif_to_jpeg(input: Uint8Array, options: Option<ConvertOptions>) -> AsyncTask<ConvertTask> {
     let quality = options
         .and_then(|o| o.quality)
         .unwrap_or(85)
