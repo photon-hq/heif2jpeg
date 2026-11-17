@@ -1,13 +1,15 @@
 {
   "name": "heif2jpeg",
   "version": "0.1.6",
-  "description": "Fast HEIC/HEIF to JPEG converter — native, zero runtime dependencies",
+  "description": "Fast HEIC/HEIF to JPEG converter \u2014 native, zero runtime dependencies",
   "type": "commonjs",
   "main": "index.js",
   "types": "index.d.ts",
   "files": [
     "index.js",
-    "index.d.ts"
+    "index.d.ts",
+    "THIRD_PARTY_NOTICES.md",
+    "LICENSES"
   ],
   "napi": {
     "name": "heif2jpeg",
@@ -42,11 +44,11 @@
     "node": ">= 18"
   },
   "optionalDependencies": {
-    "@heif2jpeg/heif2jpeg-win32-x64-msvc": "0.1.2",
-    "@heif2jpeg/heif2jpeg-win32-arm64-msvc": "0.1.2",
-    "@heif2jpeg/heif2jpeg-darwin-x64": "0.1.2",
-    "@heif2jpeg/heif2jpeg-darwin-arm64": "0.1.2",
-    "@heif2jpeg/heif2jpeg-linux-x64-gnu": "0.1.2",
-    "@heif2jpeg/heif2jpeg-linux-arm64-gnu": "0.1.2"
+    "@heif2jpeg/heif2jpeg-win32-x64-msvc": "0.1.6",
+    "@heif2jpeg/heif2jpeg-win32-arm64-msvc": "0.1.6",
+    "@heif2jpeg/heif2jpeg-darwin-x64": "0.1.6",
+    "@heif2jpeg/heif2jpeg-darwin-arm64": "0.1.6",
+    "@heif2jpeg/heif2jpeg-linux-x64-gnu": "0.1.6",
+    "@heif2jpeg/heif2jpeg-linux-arm64-gnu": "0.1.6"
   }
 }

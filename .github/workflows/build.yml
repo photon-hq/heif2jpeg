@@ -17,7 +17,7 @@ jobs:
             target: x86_64-unknown-linux-gnu
           - os: ubuntu-latest
             target: aarch64-unknown-linux-gnu
-          - os: macos-14
+          - os: macos-15
             target: aarch64-apple-darwin
           - os: macos-15
             target: x86_64-apple-darwin
@@ -74,22 +74,19 @@ jobs:
           name: bindings-${{ matrix.target }}
           path: "*.node"
 
-  publish:
-    if: startsWith(github.ref, 'refs/tags/v')
+  package:
     needs: build
     runs-on: ubuntu-latest
     permissions:
-      id-token: write
-      contents: write
+      contents: read
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 24
-          registry-url: https://registry.npmjs.org
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
 
       - name: Download all artifacts
         uses: actions/download-artifact@v4
@@ -99,7 +96,38 @@ jobs:
       - name: Move artifacts
         run: npx napi artifacts --dir artifacts
 
-      - name: Publish
+      - name: Verify release tag matches package version
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: test "$GITHUB_REF_NAME" = "v$(node -p "require('./package.json').version")"
+
+      - name: Pack and verify all release tarballs
+        run: python3 scripts/pack-release.py release-tarballs
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: npm-release-tarballs
+          path: release-tarballs/
+          if-no-files-found: error
+
+  publish:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: package
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          registry-url: https://registry.npmjs.org
+      - uses: actions/download-artifact@v4
+        with:
+          name: npm-release-tarballs
+          path: release-tarballs
+      - name: Publish the verified tarballs
         run: |
-          npx napi prepublish -t npm --skip-gh-release
-          npm publish --access public
+          for tarball in release-tarballs/native/*.tgz; do
+            npm publish "./$tarball" --access public
+          done
+          npm publish ./release-tarballs/wrapper/*.tgz --access public
