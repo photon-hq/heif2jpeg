@@ -68,3 +68,27 @@ Photon's wrapper is licensed under [Apache-2.0](LICENSE). The native addons
 include libheif and libde265 under LGPL-3.0-or-later. See
 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) for the licenses, pinned
 sources and instructions for rebuilding with modified libraries.
+
+## Releasing to npm
+
+Pull requests compile the six native targets and dry-run the Buildspace pack;
+they do not publish. A push to `main` builds the same targets and stages all
+seven packages under the npm `staging` dist-tag. Buildspace computes the next
+version from the existing `vX.Y.Z` tags and merged PRs. Both the staging and
+production tarballs use the binaries from that run. Don't bump the manifests
+or push a release tag manually.
+
+To release, select **Actions → Promote to production → Run workflow** on
+`main`. Enter the full staging version from the build summary to promote a
+specific build, or leave it blank to use the current staging dist-tag. After
+production approval, Buildspace publishes the stored candidates under
+`latest` and creates the version tag. Promotion does not rebuild.
+
+**Maintainer setup:** Before the first staging push, configure the GitHub
+`staging` and `production` environments for `main` only, with required
+reviewers for `production`. Configure an npm trusted publisher for
+`photon-hq/heif2jpeg` on the wrapper and each of the six platform packages:
+`build.yml` with environment `staging` before staging, and `promote.yml`
+with environment `production` shortly before the first promotion. Allow
+`npm publish` and `npm dist-tag` on both. See the
+[Buildspace setup guide](https://github.com/photon-hq/buildspace/blob/f2b0f40bb808a721d71711a4db59d234d86736a6/README.md#package-stage-and-promote).

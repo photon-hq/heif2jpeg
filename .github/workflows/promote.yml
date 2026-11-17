@@ -1,0 +1,28 @@
+name: Promote to production
+
+on:
+  workflow_dispatch:
+    inputs:
+      staging_version:
+        description: Staging version to promote (blank selects the current staging dist-tag)
+        type: string
+        default: ''
+
+jobs:
+  promote:
+    uses: photon-hq/buildspace/.github/workflows/package-promote.yml@f2b0f40bb808a721d71711a4db59d234d86736a6
+    permissions:
+      contents: write
+      actions: read
+      packages: read
+      attestations: read
+      id-token: write
+    with:
+      registry: https://registry.npmjs.org
+      package: heif2jpeg
+      package-selection: >-
+        heif2jpeg
+        @heif2jpeg/heif2jpeg-darwin-arm64 @heif2jpeg/heif2jpeg-darwin-x64
+        @heif2jpeg/heif2jpeg-linux-arm64-gnu @heif2jpeg/heif2jpeg-linux-x64-gnu
+        @heif2jpeg/heif2jpeg-win32-arm64-msvc @heif2jpeg/heif2jpeg-win32-x64-msvc
+      staging-version: ${{ inputs.staging_version }}

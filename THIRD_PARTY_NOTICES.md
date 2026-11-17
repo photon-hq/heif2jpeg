@@ -16,7 +16,7 @@ and [GPLv3](LICENSES/GPL-3.0.txt) accompany this package.
 The [public heif2jpeg repository](https://github.com/photon-hq/heif2jpeg)
 contains the addon source and build scripts. Each release pins its decoders as
 Git submodules. Clone the repository, check out the commit identified in your
-packaged notice (or the tag matching the installed npm version), and run:
+packaged notice, and run:
 
 ```sh
 git submodule update --init --recursive
