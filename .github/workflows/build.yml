@@ -1,11 +1,13 @@
-name: Build & Test
+name: Build, test and stage
 
 on:
   push:
     branches: [main]
-    tags: ['v*']
   pull_request:
     branches: [main]
+
+permissions:
+  contents: read
 
 jobs:
   build:
@@ -50,7 +52,7 @@ jobs:
           sudo apt-get install -y gcc-aarch64-linux-gnu g++-aarch64-linux-gnu
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
 
       - name: Build native module (cross linux-arm64)
         if: matrix.target == 'aarch64-unknown-linux-gnu'
@@ -73,61 +75,30 @@ jobs:
         with:
           name: bindings-${{ matrix.target }}
           path: "*.node"
-
-  package:
-    needs: build
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 24
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Download all artifacts
-        uses: actions/download-artifact@v4
-        with:
-          path: artifacts
-
-      - name: Move artifacts
-        run: npx napi artifacts --dir artifacts
-
-      - name: Verify release tag matches package version
-        if: startsWith(github.ref, 'refs/tags/v')
-        run: test "$GITHUB_REF_NAME" = "v$(node -p "require('./package.json').version")"
-
-      - name: Pack and verify all release tarballs
-        run: python3 scripts/pack-release.py release-tarballs
-
-      - uses: actions/upload-artifact@v4
-        with:
-          name: npm-release-tarballs
-          path: release-tarballs/
           if-no-files-found: error
 
-  publish:
-    if: startsWith(github.ref, 'refs/tags/v')
-    needs: package
-    runs-on: ubuntu-latest
+  stage:
+    needs: build
+    uses: photon-hq/buildspace/.github/workflows/package-stage.yml@f2b0f40bb808a721d71711a4db59d234d86736a6
     permissions:
-      contents: read
+      contents: write
+      pull-requests: read
+      actions: read
+      packages: write
+      attestations: write
       id-token: write
-    steps:
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 24
-          registry-url: https://registry.npmjs.org
-      - uses: actions/download-artifact@v4
-        with:
-          name: npm-release-tarballs
-          path: release-tarballs
-      - name: Publish the verified tarballs
-        run: |
-          for tarball in release-tarballs/native/*.tgz; do
-            npm publish "./$tarball" --access public
-          done
-          npm publish ./release-tarballs/wrapper/*.tgz --access public
+    with:
+      registry: https://registry.npmjs.org
+      package: heif2jpeg
+      package-selection: >-
+        heif2jpeg
+        @heif2jpeg/heif2jpeg-darwin-arm64 @heif2jpeg/heif2jpeg-darwin-x64
+        @heif2jpeg/heif2jpeg-linux-arm64-gnu @heif2jpeg/heif2jpeg-linux-x64-gnu
+        @heif2jpeg/heif2jpeg-win32-arm64-msvc @heif2jpeg/heif2jpeg-win32-x64-msvc
+      setup-pnpm: false
+      install: npm ci
+      verify: |
+        gh run download "$GITHUB_RUN_ID" --repo "$GITHUB_REPOSITORY" --pattern 'bindings-*' --dir artifacts
+        npx --no-install napi artifacts --dir artifacts
+      pack: python3 scripts/pack-release.py
+      dry-run: ${{ github.event_name == 'pull_request' }}

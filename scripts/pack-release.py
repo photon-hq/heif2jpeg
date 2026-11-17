@@ -1,4 +1,5 @@
 import json
+import os
 import shutil
 import subprocess
 import sys
@@ -7,9 +8,8 @@ import tempfile
 from pathlib import Path
 
 root = Path(__file__).resolve().parents[1]
-output = Path(sys.argv[1]).resolve()
-wrapper = json.loads((root / "package.json").read_text())
-version = wrapper["version"]
+output = Path(os.environ["PACK_DESTINATION"]).resolve()
+version = os.environ["RELEASE_VERSION"] + os.environ["RELEASE_SUFFIX"]
 source = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=root, text=True).strip()
 notice = (root / "THIRD_PARTY_NOTICES.md").read_text()
 for library in ("libheif", "libde265"):
@@ -29,20 +29,18 @@ legal["THIRD_PARTY_NOTICES.md"] = (
 
 native = sorted((root / "npm").glob("*/package.json"))
 versions = {}
-output.mkdir(parents=True, exist_ok=False)
 for manifest in [*native, root / "package.json"]:
     pkg = json.loads(manifest.read_text())
+    pkg["version"] = version
     is_wrapper = manifest.parent == root
     if is_wrapper:
         if versions.keys() != pkg["optionalDependencies"].keys():
             sys.exit("Wrapper dependencies must match the native packages")
         pkg["optionalDependencies"] = versions
     else:
-        if pkg["version"] != version or pkg["name"] in versions:
-            sys.exit(f"Unexpected native package name or version: {manifest}")
+        if pkg["name"] in versions:
+            sys.exit(f"Duplicate native package: {manifest}")
         versions[pkg["name"]] = version
-    destination = output / ("wrapper" if is_wrapper else "native")
-    destination.mkdir(exist_ok=True)
     with tempfile.TemporaryDirectory() as tmp:
         stage = Path(tmp)
         for path in ["README.md", *pkg["files"]]:
@@ -55,11 +53,11 @@ for manifest in [*native, root / "package.json"]:
             target.write_bytes(data)
         (stage / "package.json").write_text(json.dumps(pkg, indent=2) + "\n")
         packed = subprocess.check_output(
-            ["npm", "pack", "--json", "--ignore-scripts", "--pack-destination", str(destination)],
+            ["npm", "pack", "--json", "--ignore-scripts", "--pack-destination", str(output)],
             cwd=stage, text=True
         )
     filename = json.loads(packed)[0]["filename"]
-    with tarfile.open(destination / filename) as archive:
+    with tarfile.open(output / filename) as archive:
         for path, data in legal.items():
             if archive.extractfile(f"package/{path}").read() != data:
                 sys.exit(f"Invalid {path} in {filename}")
