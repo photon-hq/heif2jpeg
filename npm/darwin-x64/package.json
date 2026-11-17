@@ -9,10 +9,12 @@
   ],
   "main": "heif2jpeg.darwin-x64.node",
   "files": [
-    "heif2jpeg.darwin-x64.node"
+    "heif2jpeg.darwin-x64.node",
+    "THIRD_PARTY_NOTICES.md",
+    "LICENSES"
   ],
   "description": "Fast HEIC/HEIF to JPEG converter - native, zero runtime dependencies",
-  "license": "MIT",
+  "license": "Apache-2.0 AND LGPL-3.0-or-later",
   "engines": {
     "node": ">= 18"
   },

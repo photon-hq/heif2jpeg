@@ -7,66 +7,64 @@ settings:
 importers:
 
   .:
+    optionalDependencies:
+      '@heif2jpeg/heif2jpeg-darwin-arm64':
+        specifier: 0.1.6
+        version: 0.1.6
+      '@heif2jpeg/heif2jpeg-darwin-x64':
+        specifier: 0.1.6
+        version: 0.1.6
+      '@heif2jpeg/heif2jpeg-linux-arm64-gnu':
+        specifier: 0.1.6
+        version: 0.1.6
+      '@heif2jpeg/heif2jpeg-linux-x64-gnu':
+        specifier: 0.1.6
+        version: 0.1.6
+      '@heif2jpeg/heif2jpeg-win32-arm64-msvc':
+        specifier: 0.1.6
+        version: 0.1.6
+      '@heif2jpeg/heif2jpeg-win32-x64-msvc':
+        specifier: 0.1.6
+        version: 0.1.6
     devDependencies:
       '@napi-rs/cli':
         specifier: ^2
         version: 2.18.4
-    optionalDependencies:
-      '@heif2jpeg/heif2jpeg-darwin-arm64':
-        specifier: 0.1.2
-        version: 0.1.2
-      '@heif2jpeg/heif2jpeg-darwin-x64':
-        specifier: 0.1.2
-        version: 0.1.2
-      '@heif2jpeg/heif2jpeg-linux-arm64-gnu':
-        specifier: 0.1.2
-        version: 0.1.2
-      '@heif2jpeg/heif2jpeg-linux-x64-gnu':
-        specifier: 0.1.2
-        version: 0.1.2
-      '@heif2jpeg/heif2jpeg-win32-arm64-msvc':
-        specifier: 0.1.2
-        version: 0.1.2
-      '@heif2jpeg/heif2jpeg-win32-x64-msvc':
-        specifier: 0.1.2
-        version: 0.1.2
 
 packages:
 
-  '@heif2jpeg/heif2jpeg-darwin-arm64@0.1.2':
-    resolution: {integrity: sha512-9URj18k5mExmU56ba0SK6QxYQd1kTdMzsOVPTuHS2byZKhAALhb4CUNAwi2ECqPLYDHBhhf7oRTyVAQU2DOfnA==}
+  '@heif2jpeg/heif2jpeg-darwin-arm64@0.1.6':
+    resolution: {integrity: sha512-HSXg4gGIb/RUwdUyRfXMopxvs8JpTLexW5+XLV3MqNZ8bMjUINv8aAigBECZ7It8dFWfcpui236S+z/LLMMFHQ==}
     engines: {node: '>= 18'}
     cpu: [arm64]
     os: [darwin]
 
-  '@heif2jpeg/heif2jpeg-darwin-x64@0.1.2':
-    resolution: {integrity: sha512-3jWWaqL3rmL3XAEcU9S0BLmE2kANmLYk47v/uOIoIb79milmn7u3Huuv/kwIhbztCj/DqhzBMtqZmWpj/4gKdA==}
+  '@heif2jpeg/heif2jpeg-darwin-x64@0.1.6':
+    resolution: {integrity: sha512-2Rno3RuhB5jK61RoMThoD9XNG+p997xOs9qN+qAk4vlr8IVFvAamunWvmtumHiJOWQ97mL7WuvpTa4PGDadqcQ==}
     engines: {node: '>= 18'}
     cpu: [x64]
     os: [darwin]
 
-  '@heif2jpeg/heif2jpeg-linux-arm64-gnu@0.1.2':
-    resolution: {integrity: sha512-8rphkiO4WbRmaZgbJSjtNVQIHEsiOVkl/Qui39hw8scF1BsVeUWB1qCbw6vR1W4tJt2CpgeWM9y76MxykrmDHA==}
+  '@heif2jpeg/heif2jpeg-linux-arm64-gnu@0.1.6':
+    resolution: {integrity: sha512-myeXEKyYG39tPz7Tir526LozlRKk8a70zdpiBoEIZs1vxft3NAyj7OiR2SHbEQVOuRmcdOtJ6wxswvbafzOtAw==}
     engines: {node: '>= 18'}
     cpu: [arm64]
     os: [linux]
-    libc: [glibc]
 
-  '@heif2jpeg/heif2jpeg-linux-x64-gnu@0.1.2':
-    resolution: {integrity: sha512-Lms3UZWGi7w43rSidPjrOEqhyVhN+qncHTYsH4OVVush7PLqPdMP4ftH40GK2ijCxI98RgxHozOqFPB/jZWnig==}
+  '@heif2jpeg/heif2jpeg-linux-x64-gnu@0.1.6':
+    resolution: {integrity: sha512-fvxLcCxbmXNHEvGpnKjVZmO3Wx1ew/e2+LvOOKW1vHbH5/5E7xdgYpbJVGcVa4s4nneKbybhNXDfaMdcZYqRgg==}
     engines: {node: '>= 18'}
     cpu: [x64]
     os: [linux]
-    libc: [glibc]
 
-  '@heif2jpeg/heif2jpeg-win32-arm64-msvc@0.1.2':
-    resolution: {integrity: sha512-F8mL6iCB9r+GMLMP5GxQiH6Z2A4XLkaAEQ4/nHdIHgguXkuEhhXCJ2DYT7qZUsM2qKB+uJhGn0Wm/vMCkfpc4g==}
+  '@heif2jpeg/heif2jpeg-win32-arm64-msvc@0.1.6':
+    resolution: {integrity: sha512-WWh/rOngHL+q27Y8TXIwsBH111gBf5Z7kBc14LZg+LoD/EnK1KzXx5NcguIyhuKzAEQJk+BwTIqfP7HeFWCrmw==}
     engines: {node: '>= 18'}
     cpu: [arm64]
     os: [win32]
 
-  '@heif2jpeg/heif2jpeg-win32-x64-msvc@0.1.2':
-    resolution: {integrity: sha512-RXos9L/r/p6fQtGX2hKjKUhaS1u/TKO9QunqXb5ROa0IlsL8PldVTHxPnw6X2MTXzzVQCL/MAbnu/Z86kdvKpA==}
+  '@heif2jpeg/heif2jpeg-win32-x64-msvc@0.1.6':
+    resolution: {integrity: sha512-Op3rpPzCwUxXHbzJD9hHNFBlV2nLr2/j+oNg5v0v4utKhLJ5GZg7NbfMJa07T1MkYMRs6lS60QhY/IWwWbSlFQ==}
     engines: {node: '>= 18'}
     cpu: [x64]
     os: [win32]
@@ -78,22 +76,22 @@ packages:
 
 snapshots:
 
-  '@heif2jpeg/heif2jpeg-darwin-arm64@0.1.2':
+  '@heif2jpeg/heif2jpeg-darwin-arm64@0.1.6':
     optional: true
 
-  '@heif2jpeg/heif2jpeg-darwin-x64@0.1.2':
+  '@heif2jpeg/heif2jpeg-darwin-x64@0.1.6':
     optional: true
 
-  '@heif2jpeg/heif2jpeg-linux-arm64-gnu@0.1.2':
+  '@heif2jpeg/heif2jpeg-linux-arm64-gnu@0.1.6':
     optional: true
 
-  '@heif2jpeg/heif2jpeg-linux-x64-gnu@0.1.2':
+  '@heif2jpeg/heif2jpeg-linux-x64-gnu@0.1.6':
     optional: true
 
-  '@heif2jpeg/heif2jpeg-win32-arm64-msvc@0.1.2':
+  '@heif2jpeg/heif2jpeg-win32-arm64-msvc@0.1.6':
     optional: true
 
-  '@heif2jpeg/heif2jpeg-win32-x64-msvc@0.1.2':
+  '@heif2jpeg/heif2jpeg-win32-x64-msvc@0.1.6':
     optional: true
 
   '@napi-rs/cli@2.18.4': {}

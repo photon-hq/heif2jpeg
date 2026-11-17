@@ -64,4 +64,7 @@ npm test
 
 ## License
 
-Apache-2.0
+Photon's wrapper is licensed under [Apache-2.0](LICENSE). The native addons
+include libheif and libde265 under LGPL-3.0-or-later. See
+[THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) for the licenses, pinned
+sources and instructions for rebuilding with modified libraries.

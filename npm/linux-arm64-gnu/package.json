@@ -9,10 +9,12 @@
   ],
   "main": "heif2jpeg.linux-arm64-gnu.node",
   "files": [
-    "heif2jpeg.linux-arm64-gnu.node"
+    "heif2jpeg.linux-arm64-gnu.node",
+    "THIRD_PARTY_NOTICES.md",
+    "LICENSES"
   ],
   "description": "Fast HEIC/HEIF to JPEG converter - native, zero runtime dependencies",
-  "license": "MIT",
+  "license": "Apache-2.0 AND LGPL-3.0-or-later",
   "engines": {
     "node": ">= 18"
   },
