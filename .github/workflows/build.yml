@@ -77,8 +77,44 @@ jobs:
           path: "*.node"
           if-no-files-found: error
 
+  build-musl:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            arch: x64
+            target: x86_64-unknown-linux-musl
+          - os: ubuntu-24.04-arm
+            arch: arm64
+            target: aarch64-unknown-linux-musl
+
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Build native module on Alpine
+        run: |
+          docker run --rm -v "$PWD:/src" -w /src node:24-alpine sh -ec '
+            apk add --no-cache build-base cargo cmake
+            npm ci
+            npx --no-install napi build --platform --release --cargo-flags=--locked
+          '
+
+      - name: Test on clean Node 24 Alpine
+        run: docker run --rm --network none -v "$PWD:/src:ro" -w /src node:24-alpine npm test
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: bindings-${{ matrix.target }}
+          path: heif2jpeg.linux-${{ matrix.arch }}-musl.node
+          if-no-files-found: error
+
   stage:
-    needs: build
+    needs: [build, build-musl]
     uses: photon-hq/buildspace/.github/workflows/package-stage.yml@f2b0f40bb808a721d71711a4db59d234d86736a6
     permissions:
       contents: write
@@ -94,6 +130,7 @@ jobs:
         heif2jpeg
         @heif2jpeg/heif2jpeg-darwin-arm64 @heif2jpeg/heif2jpeg-darwin-x64
         @heif2jpeg/heif2jpeg-linux-arm64-gnu @heif2jpeg/heif2jpeg-linux-x64-gnu
+        @heif2jpeg/heif2jpeg-linux-arm64-musl @heif2jpeg/heif2jpeg-linux-x64-musl
         @heif2jpeg/heif2jpeg-win32-arm64-msvc @heif2jpeg/heif2jpeg-win32-x64-msvc
       setup-pnpm: false
       install: npm ci

@@ -24,5 +24,6 @@ jobs:
         heif2jpeg
         @heif2jpeg/heif2jpeg-darwin-arm64 @heif2jpeg/heif2jpeg-darwin-x64
         @heif2jpeg/heif2jpeg-linux-arm64-gnu @heif2jpeg/heif2jpeg-linux-x64-gnu
+        @heif2jpeg/heif2jpeg-linux-arm64-musl @heif2jpeg/heif2jpeg-linux-x64-musl
         @heif2jpeg/heif2jpeg-win32-arm64-msvc @heif2jpeg/heif2jpeg-win32-x64-msvc
       staging-version: ${{ inputs.staging_version }}

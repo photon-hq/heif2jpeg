@@ -1,0 +1,31 @@
+{
+  "name": "@heif2jpeg/heif2jpeg-linux-arm64-musl",
+  "version": "0.1.6",
+  "os": [
+    "linux"
+  ],
+  "cpu": [
+    "arm64"
+  ],
+  "main": "heif2jpeg.linux-arm64-musl.node",
+  "files": [
+    "heif2jpeg.linux-arm64-musl.node",
+    "THIRD_PARTY_NOTICES.md",
+    "LICENSES"
+  ],
+  "description": "Fast HEIC/HEIF to JPEG converter - native, zero runtime dependencies",
+  "license": "Apache-2.0 AND LGPL-3.0-or-later",
+  "engines": {
+    "node": ">= 18"
+  },
+  "libc": [
+    "musl"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/photon-hq/heif2jpeg.git"
+  }
+}
