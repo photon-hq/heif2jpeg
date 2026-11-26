@@ -56,7 +56,7 @@ jobs:
 
       - name: Build native module (cross linux-arm64)
         if: matrix.target == 'aarch64-unknown-linux-gnu'
-        run: npx napi build --platform --release --target ${{ matrix.target }}
+        run: npx napi build --platform --release --target ${{ matrix.target }} --cargo-flags=--locked
         env:
           CC: aarch64-linux-gnu-gcc
           CXX: aarch64-linux-gnu-g++
@@ -64,7 +64,7 @@ jobs:
 
       - name: Build native module
         if: matrix.target != 'aarch64-unknown-linux-gnu'
-        run: npx napi build --platform --release --target ${{ matrix.target }}
+        run: npx napi build --platform --release --target ${{ matrix.target }} --cargo-flags=--locked
 
       - name: Test
         if: "!contains(matrix.target, 'aarch64-unknown-linux') && !contains(matrix.target, 'aarch64-pc-windows') && !(matrix.os == 'macos-15' && matrix.target == 'x86_64-apple-darwin')"
@@ -90,6 +90,8 @@ jobs:
             target: aarch64-unknown-linux-musl
 
     runs-on: ${{ matrix.os }}
+    env:
+      TARGET: ${{ matrix.target }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -98,9 +100,12 @@ jobs:
       - name: Build native module on Alpine
         run: |
           docker run --rm -v "$PWD:/src" -w /src node:24-alpine sh -ec '
-            apk add --no-cache build-base cargo cmake
+            apk add --no-cache build-base cmake curl
+            curl --proto "=https" --tlsv1.2 --silent --show-error --fail https://sh.rustup.rs | sh -s -- -y --profile minimal --default-toolchain stable
+            . "$HOME/.cargo/env"
+            rustup target add "$TARGET"
             npm ci
-            npx --no-install napi build --platform --release --cargo-flags=--locked
+            npx --no-install napi build --platform --release --target "$TARGET" --cargo-flags=--locked
           '
 
       - name: Test on clean Node 24 Alpine
