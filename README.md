@@ -10,14 +10,15 @@ Built with node-api.
 npm install heif2jpeg
 ```
 
-Prebuilt binaries are provided for:
+Keep optional dependencies enabled. npm selects the matching binary package
+for your platform:
 
-| Platform | Architecture |
-|----------|-------------|
-| macOS | x64, arm64 |
-| Linux (glibc) | x64, arm64 |
-| Linux (musl) | x64, arm64 |
-| Windows | x64, arm64 |
+| Platform | x64 package | arm64 package |
+|----------|-------------|---------------|
+| macOS | `@heif2jpeg/heif2jpeg-darwin-x64` | `@heif2jpeg/heif2jpeg-darwin-arm64` |
+| Linux (glibc) | `@heif2jpeg/heif2jpeg-linux-x64-gnu` | `@heif2jpeg/heif2jpeg-linux-arm64-gnu` |
+| Linux (musl, including Alpine) | `@heif2jpeg/heif2jpeg-linux-x64-musl` | `@heif2jpeg/heif2jpeg-linux-arm64-musl` |
+| Windows | `@heif2jpeg/heif2jpeg-win32-x64-msvc` | `@heif2jpeg/heif2jpeg-win32-arm64-msvc` |
 
 Works with Node.js, Bun, and Deno.
 
@@ -71,12 +72,15 @@ sources and instructions for rebuilding with modified libraries.
 
 ## Releasing to npm
 
-Pull requests compile the six native targets and dry-run the Buildspace pack;
-they do not publish. A push to `main` builds the same targets and stages all
-seven packages under the npm `staging` dist-tag. Buildspace computes the next
+Pull requests compile the eight native targets and dry-run the Buildspace pack;
+they do not publish. Both musl builds run the HEIC conversion tests on clean
+Node 24 Alpine containers. A push to `main` builds the same targets and stages
+all nine packages under the npm `staging` dist-tag. Buildspace computes the next
 version from the existing `vX.Y.Z` tags and merged PRs. Both the staging and
-production tarballs use the binaries from that run. Don't bump the manifests
-or push a release tag manually.
+production tarballs use the binaries from that run. The source checkout uses
+local paths for the musl packages so `npm ci` can run before they exist on npm.
+The pack script replaces them with exact versions that match the wrapper.
+Don't bump the manifests or push a release tag manually.
 
 To release, select **Actions → Promote to production → Run workflow** on
 `main`. Enter the full staging version from the build summary to promote a
@@ -86,8 +90,9 @@ production approval, Buildspace publishes the stored candidates under
 
 **Maintainer setup:** Before the first staging push, configure the GitHub
 `staging` and `production` environments for `main` only, with required
-reviewers for `production`. Configure an npm trusted publisher for
-`photon-hq/heif2jpeg` on the wrapper and each of the six platform packages:
+reviewers for `production`. A maintainer must create new package names on npm
+before they can configure trusted publishing. Configure an npm trusted publisher
+for `photon-hq/heif2jpeg` on the wrapper and each of the eight platform packages:
 `build.yml` with environment `staging` before staging, and `promote.yml`
 with environment `production` shortly before the first promotion. Allow
 `npm publish` and `npm dist-tag` on both. See the

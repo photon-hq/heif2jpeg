@@ -21,6 +21,8 @@
       "additional": [
         "aarch64-apple-darwin",
         "aarch64-unknown-linux-gnu",
+        "aarch64-unknown-linux-musl",
+        "x86_64-unknown-linux-musl",
         "aarch64-pc-windows-msvc"
       ]
     }
@@ -49,6 +51,8 @@
     "@heif2jpeg/heif2jpeg-darwin-x64": "0.1.6",
     "@heif2jpeg/heif2jpeg-darwin-arm64": "0.1.6",
     "@heif2jpeg/heif2jpeg-linux-x64-gnu": "0.1.6",
-    "@heif2jpeg/heif2jpeg-linux-arm64-gnu": "0.1.6"
+    "@heif2jpeg/heif2jpeg-linux-arm64-gnu": "0.1.6",
+    "@heif2jpeg/heif2jpeg-linux-x64-musl": "file:npm/linux-x64-musl",
+    "@heif2jpeg/heif2jpeg-linux-arm64-musl": "file:npm/linux-arm64-musl"
   }
 }
